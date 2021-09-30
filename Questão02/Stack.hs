@@ -1,4 +1,4 @@
-module Stack (Stack(Stk),push, pop, top, 
+module Stack (Stack,push, pop, top, 
 empty, isEmpty, stackNew, peek) where
 
 
@@ -13,12 +13,14 @@ push x (Stk xs) = Stk (x:xs)
 
 peek :: Stack a -> a
 peek (Stk (x:s)) = x
-top _ = error "Vazio"
 
 pop :: Stack a -> Stack a
 pop (Stk (_:xs)) = Stk xs
-pop _ = error "Stack.pop: empty stack"
+pop _ = error "Sintaxe invalida"
 
+top :: Stack a -> a
+top (Stk (x:_)) = x
+top _ = error "Stack.top: empty stack"
 
 empty :: Stack a
 empty = Stk []
