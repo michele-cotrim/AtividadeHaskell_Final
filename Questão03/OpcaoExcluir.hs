@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 module OpcaoExcluir where
 
 import Contatos
@@ -5,7 +6,6 @@ import Contatos
 
 excluirNome::[Contatos] -> String -> IO([Contatos])
 excluirNome contato nome =  return(auxiliarNome contato nome)
-
 
 excluirCpf::[Contatos] -> String -> IO([Contatos])
 excluirCpf contato cpf = return(auxiliarCpf contato cpf)
@@ -21,3 +21,5 @@ auxiliarCpf [] cpf = []
 auxiliarCpf ((Contatos n c e t):xs) cpf
   |c==cpf = auxiliarNome xs cpf
   |otherwise = (Contatos n c e t):auxiliarCpf xs cpf
+
+
