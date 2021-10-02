@@ -1,1 +1,1 @@
-Or (Var "A")(Var "B") :: Formula
+Or (Var "A")(Var "B")
