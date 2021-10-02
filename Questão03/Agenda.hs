@@ -14,6 +14,7 @@ import OpcaoListar
 import OpcaoPesquisa
 import System.IO (putStrLn)
 import OpcaoEditar
+import Dados
 
 contatos :: [Contatos]
 contatos = [Contatos "Cristiano" "12345678910" "20191xxxx@uesb.edu.br" "77981599288", Contatos "Maria" "123.456.789.10" "maria@gmail.com" "77 999697720"]
@@ -30,6 +31,7 @@ agenda contato = do
   case acao of
     "1" -> do
       novosContatos <- adicionando contato
+      escrever novosContatos
       agenda novosContatos
     "2" -> do
       putStrLn ("1-Nome" ++ "\n2-CPF")
@@ -39,52 +41,15 @@ agenda contato = do
         "1" -> do
           contatoNovo <- excluirNome contato escolha
           putStrLn ""
+          escrever contatoNovo
           agenda contatoNovo
         "2" -> do
           contatoNovo <- excluirCpf contato escolha
           putStrLn ""
+          escrever contatoNovo
           agenda contatoNovo
     "3" -> do
-      putStrLn "Insira o nome do contato"
-      nome <- getLine
-      putStrLn(pesquisaNome contato nome) --verificar dps se o contato existe
-      putStrLn("É o contato que deseja editar?" ++ "\n1-Sim" ++ "\n2-Não")
-      escolha <- getLine
-      case escolha of
-            "1" -> do
-                  putStrLn"O que deseja editar? \n1-Nome\n2-Cpf\n3-Email\n4-Telefone"
-                  alternativa <- getLine
-                  valor <- getLine
-                  case alternativa of
-                        "1" -> do
-                              contatoAux <- editarNome contato nome valor
-                              putStrLn $ "\nContato auxiliar\n" ++ imprimir contatoAux
-                              contatoNovo <- excluirNome contatoAux nome
-                              putStrLn $ "\nContato novo\n" ++ imprimir contatoNovo
-                              agenda contatoNovo
-                        "2" -> do -- gerar contato novo -- excluir o antigo -- adicionar o novo
-                              contatoAux <- editarCpf contato nome valor -- ctt novo
-                              putStrLn $ "\nContato auxiliar\n" ++ imprimirContato contatoAux
-                              ctt <- excluirNome contato nome
-                              contatoNovo <- adicionarSimples2 ctt contatoAux 
-                              putStrLn $ "\nContato novo\n" ++ imprimir contatoNovo
-                              agenda contatoNovo
-                              
-                        "3" -> do
-                              contatoAux <- editarEmail contato nome valor -- ctt novo
-                              putStrLn $ "\nContato auxiliar\n" ++ imprimirContato contatoAux
-                              ctt <- excluirNome contato nome
-                              contatoNovo <- adicionarSimples2 ctt contatoAux 
-                              putStrLn $ "\nContato novo\n" ++ imprimir contatoNovo
-                              agenda contatoNovo
-
-                        "4" -> do
-                              contatoAux <- editarTelefone contato nome valor -- ctt novo
-                              putStrLn $ "\nContato auxiliar\n" ++ imprimirContato contatoAux
-                              ctt <- excluirNome contato nome
-                              contatoNovo <- adicionarSimples2 ctt contatoAux 
-                              putStrLn $ "\nContato novo\n" ++ imprimir contatoNovo
-                              agenda contatoNovo
+          funcEditar contato
 
     "4" -> do
       putStrLn $ imprimir contato
@@ -106,6 +71,57 @@ agenda contato = do
       putStrLn "Informe uma opção valida"
       agenda contato
 
+
+
+funcEditar::[Contatos] -> IO()
+funcEditar contato = do
+            putStrLn "Insira o nome do contato"
+            nome <- getLine
+            --if (pesquisaNome contato nome) == "Não encontrado" then  else "Sintaxe Invalida"
+            putStrLn(pesquisaNome contato nome) --verificar dps se o contato existe
+            putStrLn("É o contato que deseja editar?" ++ "\n1-Sim" ++ "\n2-Não")
+            escolha <- getLine
+            case escolha of
+              "1" -> do
+                    putStrLn"O que deseja editar? \n1-Nome\n2-Cpf\n3-Email\n4-Telefone"
+                    alternativa <- getLine
+                    valor <- getLine
+                    case alternativa of
+                          "1" -> do
+                                contatoAux <- editarNome contato nome valor
+                                contatoNovo <- excluirNome contatoAux nome
+                                putStrLn $ "\nLista com contato alterado\n" ++ imprimir contatoNovo
+                                escrever contatoNovo
+                                agenda contatoNovo
+                          "2" -> do -- gerar contato novo -- excluir o antigo -- adicionar o novo
+                                contatoAux <- editarCpf contato nome valor -- ctt novo
+                                ctt <- excluirNome contato nome
+                                contatoNovo <- adicionarSimples2 ctt contatoAux 
+                                putStrLn $ "\nLista com contato alterado\n" ++ imprimir contatoNovo
+                                escrever contatoNovo
+                                agenda contatoNovo
+                                
+                          "3" -> do
+                                contatoAux <- editarEmail contato nome valor -- ctt novo
+                                ctt <- excluirNome contato nome
+                                contatoNovo <- adicionarSimples2 ctt contatoAux 
+                                putStrLn $ "\nLista com contato alterado\n" ++ imprimir contatoNovo
+                                escrever contatoNovo
+                                agenda contatoNovo
+
+                          "4" -> do
+                                contatoAux <- editarTelefone contato nome valor -- ctt novo
+                                ctt <- excluirNome contato nome
+                                contatoNovo <- adicionarSimples2 ctt contatoAux 
+                                putStrLn $ "\nLista com contato alterado\n" ++ imprimir contatoNovo
+                                escrever contatoNovo
+                                agenda contatoNovo
+                          _ -> do 
+                                funcEditar contato
+              "2" -> do funcEditar contato                  
+
+
 main :: IO ()
-main =
-  (agenda contatos) -- input eh lido como string
+main = do
+  declarativa <- ler
+  (agenda declarativa) -- input eh lido como string
