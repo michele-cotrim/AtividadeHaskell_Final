@@ -9,7 +9,8 @@ main = do
     let formula = (read contents :: Formula)
     let uniqueVars = vars formula
     let map = createMapping uniqueVars
-    return (map)
+    print (getValue "A" map)
+    return ()
 
 
 toBinary :: Int -> String
@@ -24,11 +25,15 @@ vars (Not x) = vars x
 vars (And x y) = vars x `union` vars y
 vars (Or x y) = vars x `union` vars y
 
-type Attr = (Name, Bool)
 createMapping :: [Name] -> [(Name, Bool)]
 createMapping x = mapping' x []
 
-mapping' :: [Name] -> [(Name, Bool)] -> [(Name, Bool)]
+type Mapping = [(Name, Bool)]
+mapping' :: [Name] -> Mapping -> Mapping
 mapping' [] curList = curList
 mapping' (x : xs) curList = mapping' xs (curList ++ [(x, False)])
+
+getValue :: Name -> Mapping -> Bool
+getValue name ((n, v) : m) = if n == name then v   
+                            else getValue name m 
 
