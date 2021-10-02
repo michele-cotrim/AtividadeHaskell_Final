@@ -5,20 +5,18 @@ data Formula = Var String | Not Formula | And Formula Formula | Or Formula Formu
 main = do
     -- fileName <- getLine
     -- contents <- readFile fileName
-    contents <- readFile "input.txt"
+    contents <- readFile "input2.txt"
     let formula = (read contents :: Formula)
     let uniqueVars = vars formula
     let map = createMapping uniqueVars
     let allMappings = generateAll uniqueVars []
-    print (allMappings)
-    print (evaluate formula (allMappings !! 2))
+    putStrLn (evaluateAll formula allMappings)
     return ()
 
 toBinary :: Int -> String
 toBinary 0 = "0"
 toBinary 1 = "1"
 toBinary x = toBinary (div x 2) ++ show (mod x 2)
-
 
 type Name = String
 vars :: Formula -> [Name] 
@@ -32,6 +30,10 @@ evaluate (Var x) m = getValue x m
 evaluate (Not x) m = not (evaluate x m)
 evaluate (And x y) m = and [(evaluate x m), (evaluate y m)]
 evaluate (Or x y) m = or [(evaluate x m), (evaluate y m)]
+
+evaluateAll :: Formula -> [Mapping] -> String
+evaluateAll f [] = ""
+evaluateAll f (m : ms) = show (evaluate f m) ++ "\n" ++ evaluateAll f ms
 
 createMapping :: [Name] -> [(Name, Bool)]
 createMapping x = mapping' x []

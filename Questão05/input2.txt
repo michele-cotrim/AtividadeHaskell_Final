@@ -1,0 +1,2 @@
+And (Not (Var "A")) (Or (Not (Var "B")) (Not (And (Var "C") (Var "B"))))
+
