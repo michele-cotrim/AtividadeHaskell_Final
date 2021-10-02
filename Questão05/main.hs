@@ -6,17 +6,13 @@ main = do
     -- fileName <- getLine
     -- contents <- readFile fileName
     contents <- readFile "input2.txt"
-    let formula = (read contents :: Formula)
+    let formula = (read contents)
     let uniqueVars = vars formula
     let map = createMapping uniqueVars
     let allMappings = generateAll uniqueVars []
+    putStrLn (printHeader uniqueVars)
     putStrLn (evaluateAll formula allMappings)
     return ()
-
-toBinary :: Int -> String
-toBinary 0 = "0"
-toBinary 1 = "1"
-toBinary x = toBinary (div x 2) ++ show (mod x 2)
 
 type Name = String
 vars :: Formula -> [Name] 
@@ -33,7 +29,16 @@ evaluate (Or x y) m = or [(evaluate x m), (evaluate y m)]
 
 evaluateAll :: Formula -> [Mapping] -> String
 evaluateAll f [] = ""
-evaluateAll f (m : ms) = show (evaluate f m) ++ "\n" ++ evaluateAll f ms
+evaluateAll f (m : ms) = printFormula (vars f) m ++ show (evaluate f m) ++ "\n" ++ evaluateAll f ms
+
+printHeader :: [Name] -> String
+printHeader [] = "Formula"
+printHeader (x : xs) = show x ++ " " ++ printHeader xs
+
+printFormula :: [Name] -> Mapping -> String
+printFormula [] m = ""
+printFormula (n : ns) m = show (getValue n m) ++ " " ++ printFormula ns m
+
 
 createMapping :: [Name] -> [(Name, Bool)]
 createMapping x = mapping' x []
