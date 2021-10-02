@@ -1,7 +1,8 @@
 import Dicionario
 
 main = do
-    contents <- readFile "input.txt"
+    fileName <- getLine
+    contents <- readFile fileName
     let splitWords = words contents
     let count = countStrings splitWords
     let dict = addToDict splitWords
