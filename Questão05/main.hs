@@ -10,7 +10,7 @@ main = do
     let uniqueVars = vars formula
     let map = createMapping uniqueVars
     let allMappings = generateAll uniqueVars []
-    putStrLn (printHeader uniqueVars)
+    putStrLn ((printHeader uniqueVars) ++ (printFinalFormula formula))
     putStrLn (evaluateAll formula allMappings)
     return ()
 
@@ -27,17 +27,27 @@ evaluate (Not x) m = not (evaluate x m)
 evaluate (And x y) m = and [(evaluate x m), (evaluate y m)]
 evaluate (Or x y) m = or [(evaluate x m), (evaluate y m)]
 
+prettyPrint :: Bool -> String
+prettyPrint True = "V"
+prettyPrint False = "F"
+
+printFinalFormula :: Formula -> String
+printFinalFormula (Var x) = show (x)
+printFinalFormula (Not x) = "not (" ++ (printFinalFormula x) ++ ")"
+printFinalFormula (And x y) = "(" ++ printFinalFormula x ++ " and " ++ printFinalFormula y ++ ")"
+printFinalFormula (Or x y) = "(" ++ printFinalFormula x ++ " or " ++ printFinalFormula y ++ ")"
+
 evaluateAll :: Formula -> [Mapping] -> String
 evaluateAll f [] = ""
-evaluateAll f (m : ms) = printFormula (vars f) m ++ show (evaluate f m) ++ "\n" ++ evaluateAll f ms
+evaluateAll f (m : ms) = printFormula (vars f) m ++ prettyPrint (evaluate f m) ++ "\n" ++ evaluateAll f ms
 
 printHeader :: [Name] -> String
-printHeader [] = "Formula"
+printHeader [] = ""
 printHeader (x : xs) = show x ++ " " ++ printHeader xs
 
 printFormula :: [Name] -> Mapping -> String
 printFormula [] m = ""
-printFormula (n : ns) m = show (getValue n m) ++ " " ++ printFormula ns m
+printFormula (n : ns) m = prettyPrint (getValue n m) ++ " " ++ printFormula ns m
 
 
 createMapping :: [Name] -> [(Name, Bool)]
