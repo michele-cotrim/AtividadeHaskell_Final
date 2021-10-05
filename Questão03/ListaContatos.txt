@@ -1,2 +1,4 @@
-Daniel;02445;daniel.gameplay@mail.com;77998855533
-Jhon;666;jhon.devizinho@yahoo.com;999
+Daniel;281.461.800-86;daniel.uesb@mail.com;77999885553
+Michele;088.666.999-15;uesb.edu.br;778899654123
+Joao;677.116.740-23;jhon.uesb@yahoo.com;77999693241
+Maria;0223;maria@;778855

@@ -1,6 +1,6 @@
 module Contatos where
 
 
--- Nome Email CPF Telefone
+-- Nome CPF Email Telefone
 data Contatos = Contatos String String String String | Vazio
 
