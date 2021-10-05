@@ -19,6 +19,8 @@ import Dados
 contatos :: [Contatos]
 contatos = [Contatos "Cristiano" "12345678910" "20191xxxx@uesb.edu.br" "77981599288", Contatos "Maria" "123.456.789.10" "maria@gmail.com" "77 999697720"]
 
+
+{-A funcao agenda é responsavel por todas as ações do script-}
 agenda :: [Contatos] -> IO ()
 agenda contato = do
   putStrLn
@@ -72,13 +74,14 @@ agenda contato = do
       agenda contato
 
 
-
+{-Trecho que tem a funcao editar para que nao fique muito extendo a parte de cima
+Nessa funcao o usuario informa o nome do contato e confirma se realmente é o usuario desejado
+Quando o contato é editado é gerado uma cópia dele e adicionado no fim da lista e o antigo excluido-}
 funcEditar::[Contatos] -> IO()
 funcEditar contato = do
             putStrLn "Insira o nome do contato"
             nome <- getLine
-            --if (pesquisaNome contato nome) == "Não encontrado" then  else "Sintaxe Invalida"
-            putStrLn(pesquisaNome contato nome) --verificar dps se o contato existe
+            putStrLn(pesquisaNome contato nome)
             putStrLn("É o contato que deseja editar?" ++ "\n1-Sim" ++ "\n2-Não")
             escolha <- getLine
             case escolha of
@@ -95,11 +98,11 @@ funcEditar contato = do
                                 agenda contatoNovo
                           "2" -> do -- gerar contato novo -- excluir o antigo -- adicionar o novo
                                 contatoAux <- editarCpf contato nome valor -- ctt novo
-                                ctt <- excluirNome contato nome
-                                contatoNovo <- adicionarSimples2 ctt contatoAux 
+                                ctt <- excluirNome contato nome -- exclui o contato antigo
+                                contatoNovo <- adicionarSimples2 ctt contatoAux -- adiciona o contato novo na lista 
                                 putStrLn $ "\nLista com contato alterado\n" ++ imprimir contatoNovo
-                                escrever contatoNovo
-                                agenda contatoNovo
+                                escrever contatoNovo -- escreve o arquivo
+                                agenda contatoNovo -- retorna pro menu
                                 
                           "3" -> do
                                 contatoAux <- editarEmail contato nome valor -- ctt novo
