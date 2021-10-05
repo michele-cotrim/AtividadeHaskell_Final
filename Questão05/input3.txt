@@ -1,0 +1,1 @@
+Or (Var "A")(Not (Var "A"))

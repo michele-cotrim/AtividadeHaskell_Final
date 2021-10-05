@@ -10,13 +10,14 @@ type Mapping = [(Name, Bool)]
 main = do
     -- fileName <- getLine
     -- contents <- readFile fileName
-    contents <- readFile "input2.txt"
+    contents <- readFile "input.txt"
     let formula = (read contents) -- read Formula directly from input
     let uniqueVars = getUniqueVars formula -- remove duplicate variables
     -- generate all possible value attributions for each variable
     let allMappings = generateAll uniqueVars [] 
     putStrLn ((printHeader uniqueVars) ++ (printFinalFormula formula))
     putStrLn (evaluateAll formula allMappings)
+    putStrLn ("Is tautology? " ++ show (isTautology formula allMappings))
     return ()
 
 -- Remove duplicate variables, as we don't want them showing multiple times at 
@@ -42,6 +43,10 @@ evaluate (Or x y) m = or [(evaluate x m), (evaluate y m)]
 evaluateAll :: Formula -> [Mapping] -> String
 evaluateAll f [] = ""
 evaluateAll f (m : ms) = printFormula (getUniqueVars f) m ++ prettyPrint (evaluate f m) ++ "\n" ++ evaluateAll f ms
+
+isTautology :: Formula -> [Mapping] -> Bool
+isTautology f [] = True
+isTautology f (m : ms) = and [(evaluate f m), (isTautology f ms)]
 
 -- Get value of specific variable in a given mapping
 getValue :: Name -> Mapping -> Bool
